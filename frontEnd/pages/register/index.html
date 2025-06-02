@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="logo-container">
+            <img src="../../assets/logo_hardware.png" alt="Logo CURA" class="logo-image">
+        </div>
+
+        <form id="RegisterFrom">
+            <div class="input-group">
+                <span class="input-icon">📧</span>
+                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                <span class="password-toggle-icon" id="togglePassword">👁️</span>
+            </div>
+
+            <div class="input-group">
+                <span class="input-icon">🔑</span>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
+                <span class="password-toggle-icon" id="toggleconfirmPassword">👁️</span>
+            </div>
+
+            <button type="submit" class="register-button">Confirmar</button>
+        </form>
+
+        <div class="register-link">
+            Já Possui uma conta? <a href="../login/index.html">Faça o login</a>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+</body>
+</html>

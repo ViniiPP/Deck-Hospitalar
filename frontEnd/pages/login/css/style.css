@@ -1,0 +1,212 @@
+/* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg, #e9f5e9, #c8e6c9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.logo-container {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-image {
+    max-width: 180px;
+    height: auto;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/*
+  MODIFICAÇÃO AQUI:
+  Incluímos [type="text"] para garantir que os inputs de texto genéricos
+  dentro de .input-group também recebam estes estilos.
+  Isso é crucial para quando o input de senha vira type="text".
+*/
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 12px 15px; /* Padding padrão */
+    padding-left: 45px;  /* Espaço para o ícone da esquerda */
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Adicionada transição para box-shadow também */
+}
+
+/*
+  MODIFICAÇÃO AQUI:
+  Adicionamos padding-right especificamente para o input de senha
+  para dar espaço ao ícone de visibilidade.
+*/
+.input-group input#password { /* Usando o ID para especificidade */
+    padding-right: 45px; /* Espaço para o ícone da direita (toggle) */
+}
+
+
+/*
+  MODIFICAÇÃO AQUI:
+  Incluímos [type="text"]:focus para o estado de foco.
+*/
+.input-group input[type="email"]:focus,
+.input-group input[type="password"]:focus,
+.input-group input[type="text"]:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); /* Efeito de foco sutil */
+    outline: none;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #66bb6a;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 0; /* Alinhado à direita do input-group */
+    top: 0;
+    bottom: 0;
+    width: 45px; /* Largura para centralizar o ícone e área de clique */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #66bb6a;
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.options .remember-me {
+    display: flex;
+    align-items: center;
+    color: #555;
+}
+
+.options .remember-me input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #4CAF50;
+}
+
+.options .forgot-password a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.options .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.login-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.login-button:hover {
+    background-color: #388e3c;
+}
+
+.signup-link {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #555;
+}
+
+.signup-link a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        margin: 20px;
+        padding: 25px 20px;
+    }
+     .logo-image {
+        max-width: 150px;
+    }
+    .input-group input[type="email"],
+    .input-group input[type="password"],
+    .input-group input[type="text"] {
+        padding-top: 10px; /* Ajuste fino se necessário */
+        padding-bottom: 10px; /* Ajuste fino se necessário */
+        font-size: 15px;
+    }
+    /* O padding-left e padding-right já devem estar corretos com as regras anteriores */
+
+    .input-icon { /* Ícone da esquerda */
+        font-size: 16px;
+        left: 12px; /* Ajustar se o padding do input mudar */
+    }
+    .password-toggle-icon { /* Ícone da direita */
+        font-size: 16px;
+        width: 40px; /* Ajustar se o padding do input mudar */
+    }
+    .options {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .options .remember-me {
+        margin-bottom: 10px;
+    }
+    .login-button {
+        padding: 12px 0;
+        font-size: 16px;
+    }
+    .signup-link {
+        margin-top: 20px;
+        font-size: 13px;
+    }
+}
