@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Lidar com a submissão do formulário
     if (loginForm) {
-        loginForm.addEventListener('submit', function (event) {
+        loginForm.addEventListener('submit', async function (event) {
             event.preventDefault(); // Impede o envio padrão do formulário
 
             // Pega os valores dos campos no momento da submissão
@@ -22,20 +22,66 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            console.log('Tentativa de login com:');
-            console.log('Email:', email);
-            
-            // apagar dps iss aqui de baixo:
-            console.log('Senha:', password);
-            console.log('Lembrar-me:', rememberMe);
+            // Preparar os dados para enviar ao backend
+            const dadosParaEnviar = {
+                email: email,
+                password: password, 
+                rememberMe: rememberMe // Enviar o estado do checkbox "Lembrar-me" true ou false
+            };
+            console.log('Tentando login com:', dadosParaEnviar);
 
-            alert(`Login simulado!\nEmail: ${email}\nLembrar: ${rememberMe}`);
-            // Aqui você adicionaria a lógica de autenticação real (ex: chamada de API)
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosParaEnviar)
+                });
 
+                // Verifica se a requisição foi bem-sucedida
+                if (response.ok) {
+                    const resultado = await response.json();
+                    console.log('Login bem-sucedido:', resultado);
+
+                    // lidando com token de autenticação
+                    if (resultado.token) {
+                        // Salvar o token (localStorage é persistente, sessionStorage dura até fechar a aba)
+                        if (rememberMe) {
+                            // Armazenar o token no localStorage se "Lembrar-me" estiver marcado
+                            localStorage.setItem('authToken', resultado.token);
+                        } else {
+                            sessionStorage.setItem('authToken', resultado.token);
+                        }
+                        console.log('Token salvo:', resultado.token);
+                    }
+
+                    window.location.href = '../dashboard/index.html'; // Redireciona para a página de dashboard após o login (A FAZER)
+                    loginForm.reset();
+                } else {
+                    // se o backend retornar um erro
+                    let erroMsg = "Falha no login. Verifique suas credenciais.";
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.message) {
+                            erroMsg = errorData.message; // Mensagem de erro do backend
+                        } else if (response.statusText) {
+                            erroMsg = response.statusText; // Mensagem de erro genérica
+                        }
+                    } catch (e) {
+                        // Se a resposta de erro não for JSON, usa o statusText ou a mensagem padrão
+                        if (response.statusText) erroMsg = response.statusText;
+                    }
+                    console.error('Erro do backend:', response.status, erroMsg);
+                    alert(erroMsg); // Exibe a mensagem de erro ao usuário
+                }
+            } catch (error) {
+                console.error('Erro fetch ao enviar dados para o backend:', error);
+                alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+            }
             
-            loginForm.reset();
         });
-    }
+    } 
 
     // Lidar com a visibilidade da senha
     if (togglePasswordButton && passwordInput) {
@@ -45,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Altera o ícone do olho
             this.textContent = type === 'password' ? '👁️' : '🙈';
-        });
+        }); // Fecha o addEventListener para 'click'
     } else {
         console.error("Botão de alternar senha ou campo de senha não encontrado.");
-    }
+    } 
 });

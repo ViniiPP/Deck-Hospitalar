@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const changeConfirmPasswordBtn = document.getElementById('toggleconfirmPassword'); 
 
 
+    // Lidar com a visibilidade da senha
     function configurarAlternarSenha(passwordInput, togglePasswordButton) {
         if (togglePasswordButton && passwordInput) {
             togglePasswordButton.addEventListener('click', function () {
@@ -15,22 +16,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 passwordInput.setAttribute('type', type);
 
                 // Altera o ícone do olho no botão que foi clicado
-                this.textContent = tipo === 'password' ? '👁️' : '🙈';
+                this.textContent = type === 'password' ? '👁️' : '🙈';
             });
         } else {
             console.error("Botão de alternar senha ou campo de senha não encontrado.");
         }
     }
-
-    // Configura o toggle para o campo "Digite sua senha"
     configurarAlternarSenha(passwordInput, changePasswordBtn);
-
-    // Configura o toggle para o campo "Confirme sua senha"
     configurarAlternarSenha(confirmPasswordInput, changeConfirmPasswordBtn);
 
-    // Adiciona o listener para o evento de submit do formulário
+    // Lidar com a submissão do formulário
     if (registerForm) {
-        registerForm.addEventListener('submit', function (event) {
+        registerForm.addEventListener('submit', async function (event) {
             event.preventDefault(); // Impede o envio padrão do formulário
             
             // Pega os valores dos campos no momento da submissão
@@ -54,16 +51,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            console.log('Dados do Cadastro:');
-            console.log('Email:', email);
+            // Preparar os dados para enviar ao backend
+            const dadosParaEnviar = {
+                email: email,
+                senha: senha    // fazer um hash desta senha (ROBERTO)
+            };
+            console.log('Enviand dados para o backend:', dadosParaEnviar);
 
-            alert(`Cadastro simulado realizado com sucesso para o e-mail: ${email}\n(Simulação)`);
-            registerForm.reset();
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dadosParaEnviar)
+                });
+
+                // Verifica se a requisição foi bem-sucedida
+                if (response.ok) {
+                    const resultado = await response.json();
+                    console.log('Cadastro realizado com sucesso:', resultado);
+                    formularioCadastro.reset(); // Limpa o formulário
+                } else {
+                    const errorData = await response.json().catch(() => null);
+                    console.error('Erro ao cadastrar:', response.status, response.statusText, errorData);
+                }
+            } catch (error) {
+                // Captura de erros de rede ou outros problemas com a requisição fetch
+                console.error('Erro fetch ao enviar dados para o backend:', error);
+                alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+            }
 
             
             window.location.href = '../login/index.html'; // Redireciona para a página de login após o cadastro
         });
     } else {
-        console.error("Formulário de cadastro com ID 'RegisterFrom' não encontrado.");
+        console.error("Formulário de cadastro com ID 'RegisterForm' não encontrado.");
     }
 });
