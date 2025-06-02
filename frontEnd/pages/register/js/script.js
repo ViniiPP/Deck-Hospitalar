@@ -71,7 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const resultado = await response.json();
                     console.log('Cadastro realizado com sucesso:', resultado);
+                    alert(`Cadastro realizado com sucesso!`);
+
                     formularioCadastro.reset(); // Limpa o formulário
+
+                    window.location.href = '../login/index.html'; 
                 } else {
                     const errorData = await response.json().catch(() => null);
                     console.error('Erro ao cadastrar:', response.status, response.statusText, errorData);
@@ -81,9 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Erro fetch ao enviar dados para o backend:', error);
                 alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
             }
-
-            
-            window.location.href = '../login/index.html'; // Redireciona para a página de login após o cadastro
         });
     } else {
         console.error("Formulário de cadastro com ID 'RegisterForm' não encontrado.");
