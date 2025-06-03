@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CURA</title>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 </head>
 <body>
     <div class="login-container">
@@ -14,14 +15,20 @@
 
         <form id="loginForm">
             <div class="input-group">
-                <span class="input-icon">📧</span>
+                <span class="input-icon">
+                    <iconify-icon icon="solar:user-id-broken"></iconify-icon>
+                </span>
                 <input type="email" id="email" name="email" placeholder="E-mail" required>
             </div>
 
             <div class="input-group">
-                <span class="input-icon">🔒</span>
+                <span class="input-icon">
+                    <iconify-icon icon="game-icons:plain-padlock"></iconify-icon>
+                </span>
                 <input type="password" id="password" name="password" placeholder="Senha" required>
-                <span class="password-toggle-icon" id="togglePassword">👁️</span>
+                <span class="password-toggle-icon" id="togglePassword">
+                    <iconify-icon icon="mdi:eye"></iconify-icon> 
+                </span>
             </div>
 
             <div class="options">

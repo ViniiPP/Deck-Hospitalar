@@ -89,9 +89,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
 
-            // Altera o ícone do olho
-            this.textContent = type === 'password' ? '👁️' : '🙈';
-        }); // Fecha o addEventListener para 'click'
+            const iconElement = this.querySelector('iconify-icon');
+            if (iconElement) {
+                iconElement.setAttribute('icon', type === 'password' ? 'mdi:eye-off' : 'mdi:eye');
+            }
+        }); 
     } else {
         console.error("Botão de alternar senha ou campo de senha não encontrado.");
     } 

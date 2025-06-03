@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CURA</title>
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 </head>
 
 <body>
@@ -15,20 +16,30 @@
 
         <form id="RegisterFrom">
             <div class="input-group">
-                <span class="input-icon">📧</span>
+                <span class="input-icon">
+                    <iconify-icon icon="solar:user-id-broken"></iconify-icon>
+                </span>
                 <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
             </div>
 
             <div class="input-group">
-                <span class="input-icon">🔒</span>
+                <span class="input-icon">
+                    <iconify-icon icon="game-icons:plain-padlock"></iconify-icon>
+                </span>
                 <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
-                <span class="password-toggle-icon" id="togglePassword">👁️</span>
+                <span class="password-toggle-icon" id="togglePassword">
+                    <iconify-icon icon="mdi:eye"></iconify-icon> 
+                </span>
             </div>
 
             <div class="input-group">
-                <span class="input-icon">🔑</span>
+                <span class="input-icon">
+                    <iconify-icon icon="mdi:key-chain"></iconify-icon>
+                </span>
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
-                <span class="password-toggle-icon" id="toggleconfirmPassword">👁️</span>
+                <span class="password-toggle-icon" id="toggleconfirmPassword">
+                    <iconify-icon icon="mdi:eye"></iconify-icon> 
+                </span>
             </div>
 
             <button type="submit" class="register-button">Confirmar</button>
