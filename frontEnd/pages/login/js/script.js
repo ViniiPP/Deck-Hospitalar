@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Tentando login com:', dadosParaEnviar);
 
             try {
-                const response = await fetch('/api/login', {
+                const response = await fetch('http://localhost:8086/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
