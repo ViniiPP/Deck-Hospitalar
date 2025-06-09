@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (error) {
                 console.error('Erro fetch ao enviar dados para o backend:', error);
-                alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
             }
             
         });

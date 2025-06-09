@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     const resultado = await response.json();
                     console.log('Cadastro realizado com sucesso:', resultado);
-                    alert(`Cadastro realizado com sucesso!`);
 
                     formularioCadastro.reset(); // Limpa o formulário
 
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (error) {
                 // Captura de erros de rede ou outros problemas com a requisição fetch
                 console.error('Erro fetch ao enviar dados para o backend:', error);
-                alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
             }
         });
     } else {
