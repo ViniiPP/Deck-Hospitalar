@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = templateDispositivo.content.firstElementChild.cloneNode(true);
         card.dataset.id = dispositivo.id;
         card.querySelector('.card-titulo').textContent = dispositivo.name;
-        // Inicialmente define como online e com dados padrão, aguardando o WebSocket
+        // Inicialmente define como online e com dados padrão - aguardando o WebSocket
         atualizarCard(card, { status: 'Online', temperatura: 22.5, umidade: 55, luminosidade: 600, ruido: 30, qualidadeAr: 'Boa' });
         gridDispositivos.appendChild(card);
     }
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function conectarWebSocket() {
         //Substituir pela URL real do WebSocket
-        const wsUrl = 'ws://localhost:8086/ws'; // Ex: 'ws://seu-backend.com/ws'
+        const wsUrl = 'ws://localhost:8086/ws';
 
         websocket = new WebSocket(wsUrl);
 

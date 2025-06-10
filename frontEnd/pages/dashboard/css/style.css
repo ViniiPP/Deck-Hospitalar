@@ -34,11 +34,13 @@ body {
 .cabecalho {
     background-color: var(--cor-branco);
     /* Espaçamento lateral aumentado */
-    padding: 1rem 4rem;
+    padding: 1rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--cor-borda);
+    margin: 10px 20px 0 20px;
+    border-radius: 20px;
 }
 
 .logo img {
@@ -46,7 +48,7 @@ body {
 }
 
 .titulo-painel {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 500;
 }
 
@@ -206,7 +208,7 @@ body {
 .rodape {
     text-align: center;
     padding: 2rem;
-    margin-top: 2rem;
+    margin-top: 5rem;
     font-size: 0.9rem;
     color: var(--cor-texto-secundario);
 }
