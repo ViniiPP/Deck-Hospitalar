@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURA - Painel de Monitoramento</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- biblioteca para leitura de QR Code -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- biblioteca de ícones Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+
+    <header class="cabecalho">
+        <div class="logo">
+            <img src="../../assets/logo_hardware.png" alt="Logo CURA">
+        </div>
+        <h1 class="titulo-painel">Painel de Monitoramento</h1>
+        <button class="botao-adicionar" id="adicionarDispositivoBtn">
+            <iconify-icon icon="mdi:plus-circle-outline"></iconify-icon>
+            Adicionar Dispositivo
+        </button>
+    </header>
+
+    <main class="conteudo-principal">
+        <h2 class="titulo-secao">Meus Dispositivos</h2>
+        <div class="dispositivos-grid" id="dispositivosGrid">
+            <!-- Cards dos dispositivos serão inseridos aqui pelo JavaScript -->
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2025 CURA - Controle Unificado de Recuperação Ambiental. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Modal para o Leitor de QR Code -->
+    <div class="modal-overlay" id="modalQrCode">
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo">Escanear QR Code</h3>
+            <div id="leitor-qr-code"></div>
+            <p class="modal-texto-ajuda">Aponte a câmera para o QR Code do dispositivo.</p>
+            <button class="botao-fechar-modal" id="fecharModalBtn">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal para Editar o Nome do Dispositivo -->
+    <div class="modal-overlay" id="modalEditarDispositivo">
+        <div class="modal-conteudo">
+            <h3 class="modal-titulo">Editar Nome do Dispositivo</h3>
+            <form id="formEditarDispositivo">
+                <input type="hidden" id="idDispositivoEditar">
+                <div class="grupo-input-modal">
+                    <label for="novoNomeDispositivo">Nome do Dispositivo</label>
+                    <input type="text" id="novoNomeDispositivo" required>
+                </div>
+                <div class="botoes-modal">
+                    <button type="button" class="botao-modal botao-cancelar" id="fecharModalEditarBtn">Cancelar</button>
+                    <button type="submit" class="botao-modal botao-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Template do Card de Dispositivo -->
+    <template id="templateDispositivo">
+        <div class="card-dispositivo">
+            <div class="card-cabecalho">
+                <h3 class="card-titulo"></h3>
+                <div class="status">
+                    <span class="status-circulo"></span>
+                    <span class="status-texto"></span>
+                </div>
+            </div>
+            <div class="card-corpo">
+                <div class="dado-sensor">
+                    <span class="dado-icone"><iconify-icon icon="fluent-emoji-flat:thermometer"></iconify-icon></span>
+                    <span class="dado-label">Temperatura:</span>
+                    <span class="dado-valor" data-sensor="temperatura">-- °C</span>
+                </div>
+                <div class="dado-sensor">
+                    <span class="dado-icone"><iconify-icon icon="fluent-emoji-flat:droplet"></iconify-icon></span>
+                    <span class="dado-label">Umidade:</span>
+                    <span class="dado-valor" data-sensor="umidade">-- %</span>
+                </div>
+                <div class="dado-sensor">
+                    <span class="dado-icone"><iconify-icon icon="fluent-emoji-flat:light-bulb"></iconify-icon></span>
+                    <span class="dado-label">Luminosidade:</span>
+                    <span class="dado-valor" data-sensor="luminosidade">-- Lux</span>
+                </div>
+                 <div class="dado-sensor">
+                    <span class="dado-icone"><iconify-icon icon="streamline-color:volume-level-low-flat"></iconify-icon></span>
+                    <span class="dado-label">Ruído:</span>
+                    <span class="dado-valor" data-sensor="ruido">-- dB</span>
+                </div>
+                <div class="dado-sensor">
+                    <span class="dado-icone"><iconify-icon icon="mdi:air-filter"></iconify-icon></span>
+                    <span class="dado-label">Qualidade do Ar:</span>
+                    <span class="dado-valor" data-sensor="qualidadeAr">--</span>
+                </div>
+            </div>
+            <div class="card-rodape">
+                <button class="botao-card botao-editar">Editar</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="./js/script.js"></script>
+
+</body>
+</html>
