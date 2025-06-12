@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Enviand dados para o backend:', dadosParaEnviar);
 
             try {
-                const response = await fetch('/api/register', {
+                const response = await fetch('http://localhost:8086/api/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
