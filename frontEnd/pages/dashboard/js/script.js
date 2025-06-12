@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = obterToken();
         if (!token) {
             alert("Sessão expirada ou não autenticada. Por favor, faça login novamente.");
-            window.location.href = '../login/index.html'; // Ajuste o caminho para a sua tela de login
+            window.location.href = '../login/index.html';
             return;
         }
 
