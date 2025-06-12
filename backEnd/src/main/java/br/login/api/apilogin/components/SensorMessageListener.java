@@ -12,6 +12,6 @@ public class SensorMessageListener {
     private static final Logger logger = LoggerFactory.getLogger(SensorMessageListener.class);
     @RabbitListener(queues = RabbitMQconfig.QUEUE_NAME)
     public void receiveMessage(String message) {
-        logger.info(message);
+        
     }
 }
