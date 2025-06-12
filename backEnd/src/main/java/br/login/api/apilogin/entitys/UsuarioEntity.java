@@ -1,14 +1,15 @@
 package br.login.api.apilogin.entitys;
 
-import br.login.api.apilogin.components.TipoUsuario;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
+
 
 @Entity
 @Table(name = "usuario")
@@ -21,10 +22,16 @@ public class UsuarioEntity extends GenericEntity implements UserDetails {
     private String senha;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<SensorEntity> sensors;
 
+    public List<SensorEntity> getSensors() {
+        return sensors;
+    }
 
-
+    public void setSensors(List<SensorEntity> sensors) {
+        this.sensors = sensors;
+    }
 
     public String getEmail() {
         return email;

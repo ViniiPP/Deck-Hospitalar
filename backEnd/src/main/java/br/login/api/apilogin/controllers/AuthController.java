@@ -3,7 +3,7 @@ package br.login.api.apilogin.controllers;
 import br.login.api.apilogin.DTOS.SigninDTO;
 import br.login.api.apilogin.DTOS.SignupDTO;
 import br.login.api.apilogin.components.JWTutils;
-import br.login.api.apilogin.components.TipoUsuario;
+
 import br.login.api.apilogin.entitys.UsuarioEntity;
 import br.login.api.apilogin.services.EmailService;
 import br.login.api.apilogin.services.UsuarioService;

@@ -1,29 +1,34 @@
 package br.login.api.apilogin.entitys;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.UUID;
+
 
 @Entity
 @Table(name = "sensores")
-public class SensorEntity extends GenericEntity {
+public class SensorEntity {
+
+    @Id
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private UsuarioEntity user;
 
-    @Column (length = 20)
-    private Double temperatura;
 
-    @Column (length = 20)
-    private Double umidade;
+    @Column(length = 100)
+    private String emailVinculado;
 
-    @Column (length = 20)
-    private Double luminosidade;
+    public String getUuid() {
+        return uuid;
+    }
 
-    @Column (length = 20)
-    private Double ruido;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
 
     public UsuarioEntity getUser() {
@@ -34,36 +39,12 @@ public class SensorEntity extends GenericEntity {
         this.user = user;
     }
 
-    public Double getTemperatura() {
-        return temperatura;
+    public String getEmailVinculado() {
+        return emailVinculado;
     }
 
-    public void setTemperatura(Double temperatura) {
-        this.temperatura = temperatura;
-    }
-
-    public Double getUmidade() {
-        return umidade;
-    }
-
-    public void setUmidade(Double umidade) {
-        this.umidade = umidade;
-    }
-
-    public Double getLuminosidade() {
-        return luminosidade;
-    }
-
-    public void setLuminosidade(Double luminosidade) {
-        this.luminosidade = luminosidade;
-    }
-
-    public Double getRuido() {
-        return ruido;
-    }
-
-    public void setRuido(Double ruido) {
-        this.ruido = ruido;
+    public void setEmailVinculado(String emailVinculado) {
+        this.emailVinculado = emailVinculado;
     }
 
 
