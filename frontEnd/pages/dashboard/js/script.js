@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = obterToken(); // Verifica o token antes de iniciar o scanner
         if (!token) {
             alert("Sessão expirada ou não autenticada. Por favor, faça login novamente.");
-            window.location.href = '../login/index.html'; // Ajuste o caminho para a sua tela de login
+            window.location.href = '../login/index.html';
             return;
         }
         modalQrCode.classList.add('visivel');
@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = idDispositivoInput.value;
         const novoNome = novoNomeInput.value.trim();
         
-        // ++ CORREÇÃO: Pega o token aqui também ++
         const token = obterToken();
         if (!token) {
             alert("Sessão expirada. Por favor, faça login novamente.");
