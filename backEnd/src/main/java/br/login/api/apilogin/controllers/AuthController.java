@@ -30,6 +30,8 @@ public class AuthController {
 
     }
 
+
+    @CrossOrigin(origins = "http://127.0.0.1:5500/")
     @PostMapping("/register")
     public ResponseEntity<UsuarioEntity> signup(@RequestBody SignupDTO signup) throws Exception {
         UsuarioEntity novoUsuario = new UsuarioEntity();
@@ -41,7 +43,7 @@ public class AuthController {
         this.usuarioService.save(novoUsuario);
         emailService.sendEmail(novoUsuario.getEmail(),"Confirmação","Email cadastrado");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+        return ResponseEntity.ok(novoUsuario);
     }
 
     @PostMapping("/login")
