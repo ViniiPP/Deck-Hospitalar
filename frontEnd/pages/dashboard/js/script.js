@@ -125,7 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const urlBackend = 'http://localhost:8086/ws/uuid'; 
             const response = await fetch(urlBackend, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('authToken')}` 
+
+                },
                 body: JSON.stringify(dadosParaEnviar),
             });
 
