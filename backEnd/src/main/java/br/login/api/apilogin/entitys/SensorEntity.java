@@ -22,12 +22,24 @@ public class SensorEntity {
     @Column(length = 100)
     private String emailVinculado;
 
+
+    @Column(length = 100)
+    private String nomePlaca;
+
     public String getUuid() {
         return uuid;
     }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getNomePlaca() {
+        return nomePlaca;
+    }
+
+    public void setNomePlaca(String nomePlaca) {
+        this.nomePlaca = nomePlaca;
     }
 
 
@@ -46,6 +58,7 @@ public class SensorEntity {
     public void setEmailVinculado(String emailVinculado) {
         this.emailVinculado = emailVinculado;
     }
+
 
 
 }

@@ -4,19 +4,43 @@ package br.login.api.apilogin.entitys;
 
 public class DadosEntity {
 
+
+    private String uuid;
     private String qualidadeDoAr;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     private String ruido;
     private String umidade;
     private String Temperatura;
     private String Luminosidade;
 
-    public DadosEntity(String qualidadeDoAr, String ruido, String umidade, String Temperatura, String Luminosidade) {
+    public DadosEntity(String qualidadeDoAr, String ruido, String umidade, String Temperatura, String Luminosidade,String uuid) {
         this.qualidadeDoAr = qualidadeDoAr;
         this.ruido = ruido;
         this.umidade = umidade;
         this.Temperatura = Temperatura;
         this.Luminosidade = Luminosidade;
+        this.uuid = uuid;
 
+    }
+
+    @Override
+    public String toString() {
+        return "DadosEntity{" +
+                "uuid='" + uuid + '\'' +
+                ", qualidadeDoAr='" + qualidadeDoAr + '\'' +
+                ", ruido='" + ruido + '\'' +
+                ", umidade='" + umidade + '\'' +
+                ", Temperatura='" + Temperatura + '\'' +
+                ", Luminosidade='" + Luminosidade + '\'' +
+                '}';
     }
 
     public String getQualidadeDoAr() {
