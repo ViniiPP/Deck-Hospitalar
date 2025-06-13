@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = templateDispositivo.content.firstElementChild.cloneNode(true);
         card.dataset.id = dispositivo.id;
         card.querySelector('.card-titulo').textContent = dispositivo.name;
-        // Inicialmente define como online e com dados padrão - aguardando o WebSocket
-        atualizarCard(card, { status: 'Online', temperatura: 22.5, umidade: 55, luminosidade: 600, ruido: 30, qualidadeAr: 'Boa' });
+        atualizarCard(card, { status: 'Online', temperatura: '--', umidade: '--', luminosidade: '--', ruido: '--', qualidadeAr: '--' });
         gridDispositivos.appendChild(card);
     }
 
+    
     /**
      * Atualiza um card existente com novos dados do WebSocket.
      * @param {HTMLElement} card - O elemento do card a ser atualizado.
@@ -114,18 +114,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const onScanSuccess = async (idDecodificado) => {
         fecharModalQr();
-        if (dispositivos.some(d => d.id === idDecodificado)) {
+        if (dispositivos.some(d => d.uuid === idDecodificado)) {
             alert('Este dispositivo já foi adicionado.');
             return;
         }
         
-        const dadosParaEnviar = { id: idDecodificado };
+        const dadosParaEnviar = { uuid: idDecodificado };
         
         try {
             const urlBackend = 'http://localhost:8086/ws/uuid'; 
             const response = await fetch(urlBackend, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('authToken')}` 
+
+                },
                 body: JSON.stringify(dadosParaEnviar),
             });
 
@@ -134,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Resposta do backend:', mensagemSucesso);
                 
                 const novoNome = `Dispositivo - ${idDecodificado.slice(-4)}`;
-                const novoDispositivo = { id: idDecodificado, name: novoNome, status: 'Online' };
+                const novoDispositivo = { uuid: idDecodificado, name: novoNome, status: 'Online' };
                 dispositivos.push(novoDispositivo);
                 
                 adicionarCardDispositivo(novoDispositivo);

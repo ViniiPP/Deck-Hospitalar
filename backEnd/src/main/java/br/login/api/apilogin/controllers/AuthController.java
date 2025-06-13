@@ -45,9 +45,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @CrossOrigin (origins = "http://127.0.0.1:5500")
     public ResponseEntity<String> signin(@RequestBody SigninDTO signin) throws Exception {
         auth.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(signin.getEmail(),signin.getSenha()));
         String jwtToken = JWTutils.generateTokenFromUsername(signin.getEmail());
+        System.out.println("Dados recebidos : " + signin.getEmail() + signin.getSenha());
         return ResponseEntity.ok(jwtToken);
     }
 
