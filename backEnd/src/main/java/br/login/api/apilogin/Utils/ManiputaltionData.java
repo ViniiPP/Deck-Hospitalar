@@ -19,15 +19,14 @@ public class ManiputaltionData implements ConvertData {
 
             Map map = mapper.readValue(json, Map.class);
 
-            Optional<String> uuid = Optional.ofNullable(map.get("uuid"))
-                    .map(Object::toString);
+            String uuid = map.get("uuid").toString();
             String temperatura = map.get("temperatura").toString();
             String umidade = map.get("umidade").toString();
             String luminosidade = map.get("luminosidade").toString();
             String ruido = map.get("ruido").toString();
             String qualidade_do_ar = map.get("qualidade_do_ar").toString();
 
-            return new DadosEntity(qualidade_do_ar,ruido,umidade,temperatura,luminosidade,uuid.toString());
+            return new DadosEntity(qualidade_do_ar,ruido,umidade,temperatura,luminosidade,uuid);
         } catch (Exception e){
             return null;
         }
