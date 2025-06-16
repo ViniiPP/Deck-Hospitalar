@@ -3,13 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ELEMENTOS DO DOM ---
     const gridDispositivos = document.getElementById('dispositivosGrid');
     const templateDispositivo = document.getElementById('templateDispositivo');
-    
-    // Modal QR Code
+
     const adicionarDispositivoBtn = document.getElementById('adicionarDispositivoBtn');
     const modalQrCode = document.getElementById('modalQrCode');
     const fecharModalQrBtn = document.getElementById('fecharModalQrBtn');
 
-    // Modal Editar
     const modalEditar = document.getElementById('modalEditarDispositivo');
     const fecharModalEditarBtn = document.getElementById('fecharModalEditarBtn');
     const formEditarDispositivo = document.getElementById('formEditarDispositivo');
@@ -17,138 +15,182 @@ document.addEventListener('DOMContentLoaded', () => {
     const novoNomeInput = document.getElementById('novoNomeDispositivo');
 
     // --- ESTADO DA APLICAÇÃO ---
-    let dispositivos = []; // A lista começa vazia.
+    let dispositivos = [];
     let html5QrCode;
-    let websocket;
+    let stompClient;
 
     // --- FUNÇÕES ---
-
-    /**
-     * Adiciona um novo card de dispositivo à tela.
-     * @param {object} dispositivo - O objeto do dispositivo a ser adicionado.
-     */
     function adicionarCardDispositivo(dispositivo) {
         const card = templateDispositivo.content.firstElementChild.cloneNode(true);
-        card.dataset.id = dispositivo.id;
+        card.dataset.id = dispositivo.uuid;
         card.querySelector('.card-titulo').textContent = dispositivo.name;
-        atualizarCard(card, { status: 'Online', temperatura: '--', umidade: '--', luminosidade: '--', ruido: '--', qualidadeAr: '--' });
+        atualizarCard(card, {
+            status: dispositivo.status || 'Offline',
+            temperatura: '--',
+            umidade: '--',
+            luminosidade: '--',
+            ruido: '--',
+            qualidadeAr: '--'
+        });
         gridDispositivos.appendChild(card);
     }
 
-    
-    /**
-     * Atualiza um card existente com novos dados do WebSocket.
-     * @param {HTMLElement} card - O elemento do card a ser atualizado.
-     * @param {object} dados - Os novos dados do sensor.
-     */
+    async function carregarDispositivos() {
+        console.log(sessionStorage.getItem('authToken'));
+        try {
+            const response = await fetch('http://localhost:8086/User', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('authToken')}`
+                }
+            });
+
+            if (!response.ok) {
+                const erro = await response.text();
+                alert(`Erro ao carregar dispositivos: ${erro}`);
+                return;
+            }
+
+            const dados = await response.json();
+            console.log('Resposta da API:', dados);
+
+            const sensores = dados.sensors;
+            if (!Array.isArray(sensores)) throw new Error('Formato de sensores inválido');
+
+            dispositivos = sensores.map(dispositivo => ({
+                uuid: dispositivo.uuid,
+                name: dispositivo.nomePlaca || `Dispositivo - ${dispositivo.uuid?.slice(-4)}`,
+                status: 'Online'
+            }));
+
+            dispositivos.forEach(dispositivo => {
+                adicionarCardDispositivo(dispositivo);
+            });
+
+            // Só conecta ao WS após carregar os dispositivos
+            conectarWebSocket();
+
+        } catch (error) {
+            console.error('Erro ao carregar dispositivos:', error);
+            alert('Erro de rede ou formato inválido ao carregar dispositivos.');
+        }
+    }
+
+    // Atualiza o card com os dados do sensor
     function atualizarCard(card, dados) {
         const isOnline = dados.status === 'Online';
-        card.querySelector('.status-texto').textContent = dados.status;
+        card.querySelector('.status-texto').textContent = dados.status || 'Offline';
         card.classList.toggle('online', isOnline);
         card.classList.toggle('offline', !isOnline);
-        
-        card.querySelector('[data-sensor="temperatura"]').textContent = isOnline ? `${dados.temperatura || '--'} °C` : '-- °C';
-        card.querySelector('[data-sensor="umidade"]').textContent = isOnline ? `${dados.umidade || '--'} %` : '-- %';
-        card.querySelector('[data-sensor="luminosidade"]').textContent = isOnline ? `${dados.luminosidade || '--'} Lux` : '-- Lux';
-        card.querySelector('[data-sensor="ruido"]').textContent = isOnline ? `${dados.ruido || '--'} dB` : '-- dB';
-        card.querySelector('[data-sensor="qualidadeAr"]').textContent = isOnline ? `${dados.qualidadeAr || '--'}` : '--';
+
+        // As propriedades do backend tem snake_case, aqui convertemos para camelCase na atribuição
+        card.querySelector('[data-sensor="temperatura"]').textContent = isOnline ? `${dados.temperatura ?? dados.Temperatura ?? '--'} °C` : '-- °C';
+        card.querySelector('[data-sensor="umidade"]').textContent = isOnline ? `${dados.umidade ?? '--'} %` : '-- %';
+        card.querySelector('[data-sensor="luminosidade"]').textContent = isOnline ? `${dados.luminosidade ?? '--'} Lux` : '-- Lux';
+        card.querySelector('[data-sensor="ruido"]').textContent = isOnline ? `${dados.ruido ?? '--'} dB` : '-- dB';
+        // qualidade do ar pode vir como qualidade_do_ar ou qualidadeAr (ajuste aqui)
+        const qualidade = dados.qualidadeDoAr ?? '--';
+        card.querySelector('[data-sensor="qualidadeAr"]').textContent = isOnline ? qualidade : '--';
     }
-    
-    /**
-     * Conecta ao servidor WebSocket para receber dados em tempo real.
-     */
+
+    // --- Conexão STOMP com SockJS ---
     function conectarWebSocket() {
-        //Substituir pela URL real do WebSocket
-        const wsUrl = 'ws://localhost:8086/ws';
+        if (stompClient && stompClient.connected) {
+            console.log('WebSocket já conectado');
+            return;
+        }
 
-        websocket = new WebSocket(wsUrl);
+        const token = sessionStorage.getItem('authToken');
+        const socket = new SockJS(`http://localhost:8086/ws`);
+        stompClient = Stomp.over(socket);
 
-        websocket.onopen = () => {
-            console.log('Conexão WebSocket estabelecida com sucesso.');
-        };
+        // Passa o token no header Authorization (jwt)
+        stompClient.connect(
+            { Authorization: `Bearer ${token}` },
+            (frame) => {
+                console.log('Conectado ao WebSocket STOMP:', frame);
 
-        websocket.onmessage = (event) => {
-            try {
-                const dados = JSON.parse(event.data);
-                console.log('Dados recebidos via WebSocket:', dados);
+                dispositivos.forEach(dispositivo => {
+                    if (dispositivo.uuid && dispositivo.uuid.includes('-')) {
+                        const topic = `/topic/placa/${dispositivo.uuid}`;
+                        stompClient.subscribe(topic, (mensagem) => {
+                            const dados = JSON.parse(mensagem.body);
+                            console.log(`Dados recebidos de ${dispositivo.uuid}:`, dados);
 
-                // Encontra o dispositivo e o card correspondente na tela
-                const dispositivo = dispositivos.find(d => d.id === dados.id);
-                const card = gridDispositivos.querySelector(`[data-id="${dados.id}"]`);
-
-                if (dispositivo && card) {
-                    // Atualiza o status e os dados no objeto do dispositivo
-                    dispositivo.status = dados.status || 'Online';
-                    // Atualiza o card na tela com os novos dados
-                    atualizarCard(card, dados);
-                }
-            } catch (error) {
-                console.error('Erro ao processar mensagem do WebSocket:', error);
+                            const card = gridDispositivos.querySelector(`[data-id="${dispositivo.uuid}"]`);
+                            if (card) {
+                                // Atualiza o card com os dados do backend (status Online)
+                                atualizarCard(card, { ...dados, status: 'Online' });
+                            }
+                        });
+                        console.log(`Inscrito no tópico: ${topic}`);
+                    } else {
+                        console.warn(`UUID inválido ignorado: ${dispositivo.uuid}`);
+                    }
+                });
+            },
+            (erro) => {
+                console.error('Erro na conexão STOMP:', erro);
+                setTimeout(conectarWebSocket, 5000); // Tenta reconectar
             }
-        };
-
-        websocket.onerror = (error) => {
-            console.error('Erro no WebSocket:', error);
-        };
-
-        websocket.onclose = () => {
-            console.log('Conexão WebSocket fechada. Tentando reconectar em 5 segundos...');
-            // Lógica simples de reconexão
-            setTimeout(conectarWebSocket, 5000);
-        };
+        );
     }
 
-    // --- Funções do Modal de QR Code ---
+    // --- Funções do Modal QR Code ---
     const iniciarScanner = () => {
         modalQrCode.classList.add('visivel');
         html5QrCode = new Html5Qrcode("leitor-qr-code");
         const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-        
+
         html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
             .catch(err => {
-                console.error("Não foi possível iniciar o scanner de QR Code.", err);
-                alert("Erro ao iniciar a câmera. Verifique as permissões.");
+                console.error("Erro ao iniciar scanner QR:", err);
+                alert("Erro ao iniciar a câmera.");
                 fecharModalQr();
             });
     };
-    
+
     const onScanSuccess = async (idDecodificado) => {
         fecharModalQr();
         if (dispositivos.some(d => d.uuid === idDecodificado)) {
             alert('Este dispositivo já foi adicionado.');
             return;
         }
-        
-        const dadosParaEnviar = { uuid: idDecodificado };
-        
+
         try {
-            const urlBackend = 'http://localhost:8086/ws/uuid'; 
+            const urlBackend = 'http://localhost:8086/ws/uuid';
             const response = await fetch(urlBackend, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem('authToken')}` 
-
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('authToken')}`
                 },
-                body: JSON.stringify(dadosParaEnviar),
+                body: JSON.stringify({ uuid: idDecodificado }),
             });
 
             if (response.ok) {
-                const mensagemSucesso = await response.text();
-                console.log('Resposta do backend:', mensagemSucesso);
-                
                 const novoNome = `Dispositivo - ${idDecodificado.slice(-4)}`;
                 const novoDispositivo = { uuid: idDecodificado, name: novoNome, status: 'Online' };
                 dispositivos.push(novoDispositivo);
-                
                 adicionarCardDispositivo(novoDispositivo);
+
+                if (stompClient && stompClient.connected) {
+                    const topic = `/topic/placa/${novoDispositivo.uuid}`;
+                    stompClient.subscribe(topic, (mensagem) => {
+                        const dados = JSON.parse(mensagem.body);
+                        const card = gridDispositivos.querySelector(`[data-id="${novoDispositivo.uuid}"]`);
+                        if (card) atualizarCard(card, { ...dados, status: 'Online' });
+                    });
+                }
+
                 alert(`Dispositivo "${novoNome}" adicionado com sucesso!`);
             } else {
-                const mensagemErro = await response.text();
-                alert(`Falha ao adicionar dispositivo: ${mensagemErro || 'Erro desconhecido.'}`);
+                const erro = await response.text();
+                alert(`Erro ao adicionar dispositivo: ${erro}`);
             }
         } catch (error) {
-            console.error('Erro de rede ao conectar com o backend:', error);
-            alert('Não foi possível conectar ao servidor. Verifique o endereço e se o backend está rodando.');
+            console.error('Erro ao conectar ao backend:', error);
+            alert('Erro de conexão com o servidor.');
         }
     };
 
@@ -159,12 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
         modalQrCode.classList.remove('visivel');
     };
 
-
-    // --- Funções do Modal de Edição ---
-    const abrirModalEditar = (idDispositivo) => {
-        const dispositivo = dispositivos.find(d => d.id === idDispositivo);
+    // --- Modal de Edição ---
+    const abrirModalEditar = (uuid) => {
+        const dispositivo = dispositivos.find(d => d.uuid === uuid);
         if (dispositivo) {
-            idDispositivoInput.value = dispositivo.id;
+            idDispositivoInput.value = dispositivo.uuid;
             novoNomeInput.value = dispositivo.name;
             modalEditar.classList.add('visivel');
         }
@@ -176,41 +217,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const salvarAlteracoesDispositivo = async (event) => {
         event.preventDefault();
-        const id = idDispositivoInput.value;
+        const uuid = idDispositivoInput.value;
         const novoNome = novoNomeInput.value.trim();
 
         if (novoNome) {
             try {
-                const urlEditar = `http://localhost:8086/api/dispositivos/${id}/nome`;
+                const urlEditar = `http://localhost:8086/api/dispositivos/${uuid}/nome`;
                 const response = await fetch(urlEditar, {
-                    method: 'PUT', 
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome: novoNome }),
                 });
 
                 if (response.ok) {
-                    const dispositivo = dispositivos.find(d => d.id === id);
+                    const dispositivo = dispositivos.find(d => d.uuid === uuid);
                     if (dispositivo) {
                         dispositivo.name = novoNome;
-                        const card = gridDispositivos.querySelector(`[data-id="${id}"]`);
-                        if(card) card.querySelector('.card-titulo').textContent = novoNome;
+                        const card = gridDispositivos.querySelector(`[data-id="${uuid}"]`);
+                        if (card) card.querySelector('.card-titulo').textContent = novoNome;
                     }
-                    alert('Nome do dispositivo atualizado com sucesso!');
+                    alert('Nome atualizado com sucesso!');
                     fecharModalEditar();
                 } else {
-                     const mensagemErro = await response.text();
-                     alert(`Falha ao atualizar nome: ${mensagemErro}`);
+                    const erro = await response.text();
+                    alert(`Erro ao atualizar: ${erro}`);
                 }
-            } catch(error) {
-                console.error("Erro ao salvar alteração do nome:", error);
-                alert("Não foi possível salvar o novo nome. Verifique sua conexão.");
+            } catch (error) {
+                console.error('Erro ao salvar novo nome:', error);
+                alert('Erro de rede.');
             }
         } else {
-            alert('O nome do dispositivo não pode ficar em branco.');
+            alert('O nome não pode ser vazio.');
         }
     };
 
-    // --- EVENT LISTENERS ---
+    // --- EVENTOS ---
     adicionarDispositivoBtn.addEventListener('click', iniciarScanner);
     fecharModalQrBtn.addEventListener('click', fecharModalQr);
     modalQrCode.addEventListener('click', (event) => {
@@ -221,9 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const botaoEditar = event.target.closest('.botao-editar');
         if (botaoEditar) {
             const card = botaoEditar.closest('.card-dispositivo');
-            if (card) {
-                abrirModalEditar(card.dataset.id);
-            }
+            if (card) abrirModalEditar(card.dataset.id);
         }
     });
 
@@ -234,5 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INICIALIZAÇÃO ---
-    conectarWebSocket();
+    carregarDispositivos();
+
 });
