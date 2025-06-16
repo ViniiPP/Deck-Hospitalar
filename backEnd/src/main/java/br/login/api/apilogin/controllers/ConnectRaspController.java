@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("ws/uuid")
+@CrossOrigin(origins = "http://127.0.0.1:5500/")
 public class ConnectRaspController {
 
     private final RaspService raspService;

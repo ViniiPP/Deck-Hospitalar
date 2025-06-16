@@ -28,7 +28,7 @@ public class RaspService {
                 .orElseThrow(() -> new Exception("Usuário não encontrado"));
 
         SensorEntity sensor = new SensorEntity();
-        sensor.setUuid(novoUuid.toString());
+        sensor.setUuid(novoUuid.getUuid());
         sensor.setUser(usuario);
         sensor.setEmailVinculado(usuario.getEmail());
 

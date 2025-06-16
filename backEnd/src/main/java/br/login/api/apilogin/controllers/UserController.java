@@ -7,6 +7,7 @@ import br.login.api.apilogin.entitys.UsuarioEntity;
 import br.login.api.apilogin.repositorys.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public class UserController {
     UsuarioRepository usuarioRepository;
 
     @GetMapping()
+    @CrossOrigin(origins = "*")
     public ResponseEntity<UsuarioEntity> getUser() throws Exception {
         String email = ExtractEmail.extrairEmail();
         Optional<UsuarioEntity> findUser = this.usuarioRepository.findByEmail(email);

@@ -1,6 +1,8 @@
 package br.login.api.apilogin.entitys;
 
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 public class DadosEntity {
 
@@ -21,7 +23,7 @@ public class DadosEntity {
     private String Temperatura;
     private String Luminosidade;
 
-    public DadosEntity(String qualidadeDoAr, String ruido, String umidade, String Temperatura, String Luminosidade,String uuid) {
+    public DadosEntity(String qualidadeDoAr, String ruido, String umidade, String Temperatura, String Luminosidade, String uuid) {
         this.qualidadeDoAr = qualidadeDoAr;
         this.ruido = ruido;
         this.umidade = umidade;

@@ -21,15 +21,10 @@ public class SensorMessageListener {
     }
 
     @RabbitListener(queues = RabbitMQconfig.QUEUE_NAME)
-<<<<<<< HEAD
     public void receiveMessage(String message) throws Exception {
         DadosEntity dados = ManiputaltionData.ConvertionData(message);
         System.out.println(dados.toString());
         placaMessageSender.enviarMensagem(dados);
         logger.info(message);
-=======
-    public void receiveMessage(String message) {
-
->>>>>>> 2c2e53267ef1105eceb5323d82bc6d1ce5d65cc8
     }
 }
