@@ -7,13 +7,11 @@
     --cor-verde-principal: #2e7d32;
     --cor-verde-claro: #4caf50;
     --cor-verde-hover: #388e3c;
-    /* Cor azul atualizada */
     --cor-azul-principal: #0D99FF;
     --cor-azul-hover: #0b84e0;
     --cor-borda: #e0e0e0;
     --cor-online: #4caf50;
     --cor-offline: #f44336;
-    /* Sombra atualizada para ser mais leve */
     --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
@@ -25,7 +23,6 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    /* Fundo atualizado para gradiente */
     background: linear-gradient(120deg, #e9f5e9, #c8e6c9);
     color: var(--cor-texto-principal);
     line-height: 1.6;
@@ -33,7 +30,6 @@ body {
 
 .cabecalho {
     background-color: var(--cor-branco);
-    /* Espaçamento lateral aumentado */
     padding: 1rem 3rem;
     display: flex;
     justify-content: space-between;
@@ -76,7 +72,6 @@ body {
 }
 
 .conteudo-principal {
-    /* Centraliza a área dos dispositivos com uma largura máxima */
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
@@ -183,7 +178,7 @@ body {
     padding: 1.25rem;
     border-top: 1px solid var(--cor-borda);
     display: flex;
-    justify-content: flex-end; /* Altera para alinhar o único botão à direita */
+    justify-content: flex-end;
     gap: 0.75rem;
 }
 
@@ -213,7 +208,6 @@ body {
     color: var(--cor-texto-secundario);
 }
 
-/* --- Estilos do Modal (genéricos) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -256,7 +250,6 @@ body {
     font-size: 1.5rem;
 }
 
-/* Estilos específicos para o Modal de QR Code */
 #leitor-qr-code {
     width: 100%;
     max-width: 400px;
@@ -281,7 +274,6 @@ body {
     cursor: pointer;
 }
 
-/* --- Estilos para o novo Modal de Edição --- */
 .grupo-input-modal {
     text-align: left;
     margin-bottom: 1.5rem;
@@ -344,7 +336,7 @@ body {
     .cabecalho {
         flex-direction: column;
         gap: 1rem;
-        padding: 1rem 2rem; /* Reduz o padding em telas menores */
+        padding: 1rem 2rem;
     }
     .conteudo-principal {
         padding: 1rem;

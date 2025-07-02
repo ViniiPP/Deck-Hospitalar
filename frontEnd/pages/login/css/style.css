@@ -39,12 +39,6 @@ body {
     position: relative;
 }
 
-/*
-  MODIFICAÇÃO AQUI:
-  Incluímos [type="text"] para garantir que os inputs de texto genéricos
-  dentro de .input-group também recebam estes estilos.
-  Isso é crucial para quando o input de senha vira type="text".
-*/
 .input-group input[type="email"],
 .input-group input[type="password"],
 .input-group input[type="text"] {
@@ -59,20 +53,10 @@ body {
     transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Adicionada transição para box-shadow também */
 }
 
-/*
-  MODIFICAÇÃO AQUI:
-  Adicionamos padding-right especificamente para o input de senha
-  para dar espaço ao ícone de visibilidade.
-*/
-.input-group input#password { /* Usando o ID para especificidade */
-    padding-right: 45px; /* Espaço para o ícone da direita (toggle) */
+.input-group input#password { 
+    padding-right: 45px; 
 }
 
-
-/*
-  MODIFICAÇÃO AQUI:
-  Incluímos [type="text"]:focus para o estado de foco.
-*/
 .input-group input[type="email"]:focus,
 .input-group input[type="password"]:focus,
 .input-group input[type="text"]:focus {
@@ -93,10 +77,10 @@ body {
 
 .password-toggle-icon {
     position: absolute;
-    right: 0; /* Alinhado à direita do input-group */
+    right: 0; 
     top: 0;
     bottom: 0;
-    width: 45px; /* Largura para centralizar o ícone e área de clique */
+    width: 45px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -185,19 +169,18 @@ body {
     .input-group input[type="email"],
     .input-group input[type="password"],
     .input-group input[type="text"] {
-        padding-top: 10px; /* Ajuste fino se necessário */
-        padding-bottom: 10px; /* Ajuste fino se necessário */
+        padding-top: 10px;
+        padding-bottom: 10px; 
         font-size: 15px;
     }
-    /* O padding-left e padding-right já devem estar corretos com as regras anteriores */
 
-    .input-icon { /* Ícone da esquerda */
+    .input-icon {
         font-size: 16px;
-        left: 12px; /* Ajustar se o padding do input mudar */
+        left: 12px; 
     }
-    .password-toggle-icon { /* Ícone da direita */
+    .password-toggle-icon {
         font-size: 16px;
-        width: 40px; /* Ajustar se o padding do input mudar */
+        width: 40px;
     }
     .options {
         flex-direction: column;

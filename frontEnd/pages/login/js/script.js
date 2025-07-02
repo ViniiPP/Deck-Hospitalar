@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 // Verifica se a requisição foi bem-sucedida
-                
                 if (response.ok) {
                     const resultado = await response.text();
                     console.log('Login bem-sucedido:', resultado);
