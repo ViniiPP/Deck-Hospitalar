@@ -177,4 +177,6 @@ A configuração da conexão está em `application.properties`.
 5.  Abra um Pull Request
 
 
-Desenvolvido por **Vinícius Pereira Polli & Roberto Jacobs**.
+Desenvolvido por:
+-   FrontEnd: **Vinícius Pereira Polli**;
+-   BackEnd: **Roberto Jacobs**;
