@@ -180,3 +180,5 @@ A configuração da conexão está em `application.properties`.
 Desenvolvido por:
 -   FrontEnd: **Vinícius Pereira Polli**;
 -   BackEnd: **Roberto Jacobs**;
+-   BackEnd: Laura Hahn Schu;
+-   Docs: Iasmin Souto;
